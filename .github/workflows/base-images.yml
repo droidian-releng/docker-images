@@ -26,6 +26,9 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
+      - name: APT update
+        run: sudo apt update
+
       - name: QEMU set-up
         uses: docker/setup-qemu-action@v1
 
