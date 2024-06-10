@@ -1,0 +1,72 @@
+# Pull latest Droidian base image for flavour current
+ARG ARCH=
+FROM quay.io/droidian/base:current-arm64
+
+# Copy relevant repositories and keyrings
+# Note: .dummy files used to keep the directory hierarchy in git are
+# copied too, see moby/moby#26332
+COPY repositories/current/all/* /etc/apt/sources.list.d/
+COPY repositories/current/arm64/* /etc/apt/sources.list.d/
+
+# Copy apt preferences
+COPY preferences/current/* /etc/apt/preferences.d/
+
+COPY keyrings/all/* /etc/apt/droidian-gpg.d/
+COPY keyrings/arm64/* /etc/apt/droidian-gpg.d/
+
+COPY common/apt.conf.d/* /etc/apt/apt.conf.d/
+
+# Pre-create users and groups. We are going to remap them anyway
+# at runtime by looking at permissions of the bind-mounted directories
+# but at least we already know which ids to change
+RUN adduser --system --home /var/lib/aptly-api --no-create-home --uid 10100 aptly-api && \
+ addgroup --gid 10100 aptly-api && \
+ adduser aptly-api aptly-api && \
+ adduser --system --home /srv/aptly-queue --no-create-home --uid 10101 aptly-queue && \
+ addgroup --gid 10101 aptly-queue && \
+ adduser aptly-queue aptly-queue && \
+ adduser aptly-api aptly-queue
+
+# Update and install
+RUN apt-get update && apt-get install -y \
+ systemd \
+ systemd-sysv \
+ aptly \
+ aptly-api \
+ python3 \
+ python3-requests \
+ python3-debian \
+ wget \
+ aptly-intake
+
+# Systemd configuration:
+# Credits to Alexander Haase <ahaase@alexhaase.de>
+#
+# https://github.com/alehaa/docker-debian-systemd
+
+# Configure systemd.
+#
+# For running systemd inside a Docker container, some additional tweaks are
+# required. Some of them have already been applied above.
+#
+# The 'container' environment variable tells systemd that it's running inside a
+# Docker container environment.
+ENV container docker
+
+# A different stop signal is required, so systemd will initiate a shutdown when
+# running 'docker stop <container>'.
+STOPSIGNAL SIGRTMIN+3
+
+# The host's cgroup filesystem need's to be mounted (read-only) in the
+# container. '/run', '/run/lock' and '/tmp' need to be tmpfs filesystems when
+# running the container without 'CAP_SYS_ADMIN'.
+#
+# NOTE: For running Debian stretch, 'CAP_SYS_ADMIN' still needs to be added, as
+#       stretch's version of systemd is not recent enough. Buster will run just
+#       fine without 'CAP_SYS_ADMIN'.
+VOLUME [ "/sys/fs/cgroup", "/run", "/run/lock", "/tmp" ]
+
+# As this image should run systemd, the default command will be changed to start
+# the init system. CMD will be preferred in favor of ENTRYPOINT, so one may
+# override it when creating the container to e.g. to run a bash console instead.
+CMD [ "/sbin/init" ]

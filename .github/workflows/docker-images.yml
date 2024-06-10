@@ -21,8 +21,6 @@ jobs:
         namespace: [droidian]
         exclude:
           - template: aptly-intake
-            arch: arm64
-          - template: aptly-intake
             arch: armhf
 
     name: ${{ matrix.template }}:${{ matrix.dist }} on ${{ matrix.arch }}
