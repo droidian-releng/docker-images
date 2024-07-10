@@ -41,7 +41,7 @@ RUN apt-get update && apt-get install -y --allow-downgrades \
 
 # FIXME: install libc6:i386
 RUN \
-	if [ "Xarmhf" = "amd64" ]; then \
+	if [ "armhf" = "amd64" ]; then \
 		apt-get install -y libc6:i386; \
 	fi
 
