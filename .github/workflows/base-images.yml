@@ -4,6 +4,7 @@
 name: droidian base images
 
 on:
+  workflow_dispatch:
   schedule:
     - cron: "59 20 * * *"
   push:
