@@ -30,13 +30,16 @@ ARCH=$(echo "${IMAGE}" | cut -d"/" -f1)
 case "${ARCH}" in
 	"arm64")
 		_DOCKER_ARCH="arm64v8"
+		_DOCKER_PLATFORM="linux/arm64"
 		;;
 	"armhf")
 		_DOCKER_ARCH="arm32v7"
+		_DOCKER_PLATFORM="linux/arm"
 		;;
 	*)
 		_DOCKER_ARCH="${ARCH}"
+		_DOCKER_PLATFORM="linux/${ARCH}"
 		;;
 esac
 
-docker build -f "./Dockerfile.${_sanitized}" --tag "${IMAGE}" --build-arg ARCH="${_DOCKER_ARCH}" --output type=docker .
+docker build -f "./Dockerfile.${_sanitized}" --tag "${IMAGE}" --build-arg ARCH="${_DOCKER_ARCH}" --platform ${_DOCKER_PLATFORM} --output type=docker .
