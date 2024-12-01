@@ -3,25 +3,7 @@
 # Quick and dirty deployer
 #
 
-if [ "${HAS_JOSH_K_SEAL_OF_APPROVAL}" == "true" ]; then
-	# Travis CI
-
-	BRANCH="${TRAVIS_BRANCH}"
-	COMMIT="${TRAVIS_COMMIT}"
-	PROJECT_SLUG="${TRAVIS_REPO_SLUG}"
-	if [ -n "${TRAVIS_TAG}" ]; then
-		TAG="${TRAVIS_TAG}"
-	fi
-elif [ "${DRONE}" == "true" ]; then
-	# Drone CI
-
-	BRANCH="${DRONE_BRANCH}"
-	COMMIT="${DRONE_COMMIT}"
-	PROJECT_SLUG="${DRONE_REPO}"
-	if [ -n "${DRONE_TAG}" ]; then
-		TAG="${DRONE_TAG}"
-	fi
-elif [ "${CIRCLECI}" == "true" ]; then
+if [ "${CIRCLECI}" == "true" ]; then
 	# CircleCI
 
 	BRANCH="${CIRCLE_BRANCH}"
@@ -32,7 +14,7 @@ elif [ "${CIRCLECI}" == "true" ]; then
 	fi
 else
 	# Sorry
-	echo "This script runs only on Travis CI or Drone CI!"
+	echo "This script runs only on CircleCI!"
 	exit 1
 fi
 
