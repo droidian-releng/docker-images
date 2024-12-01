@@ -8,6 +8,7 @@ if [ "${CIRCLECI}" == "true" ]; then
 
 	BRANCH="${CIRCLE_BRANCH}"
 	COMMIT="${CIRCLE_SHA1}"
+	NAMESPACE="${CIRCLE_PROJECT_USERNAME}"
 	PROJECT_SLUG="${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}"
 	if [ -n "${CIRCLE_TAG}" ]; then
 		TAG="${CIRCLE_TAG}"
@@ -37,6 +38,13 @@ echo "Determining target"
 if [ -n "${TAG}" ]; then
 	# Tag, should go to production
 	TARGET="production"
+elif [[ ${BRANCH} = feature/group/* ]]; then
+	# Group
+	_branch=${BRANCH/feature\/group\//}
+	_branch=${_branch//./-}
+	_branch=${_branch//_/-}
+	_branch=${_branch//\//-}
+	TARGET=$(echo ${NAMESPACE}-${_branch} | tr '[:upper:]' '[:lower:]')
 elif [[ ${BRANCH} = feature/* ]]; then
 	# Feature branch
 	_project=${PROJECT_SLUG//\//-}
