@@ -65,6 +65,10 @@ chroot base-${ARCH}-${FLAVOUR} \
 /debootstrap/debootstrap \
 	--second-stage
 
+# Install droidian release metadata
+chroot base-${ARCH}-${FLAVOUR} \
+apt-get install --yes droidian-release
+
 # Cleanup
 chroot base-${ARCH}-${FLAVOUR} \
 apt-get clean
