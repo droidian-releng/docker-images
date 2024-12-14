@@ -31,6 +31,8 @@ trap onexit EXIT
 git clone https://salsa.debian.org/installer-team/debootstrap.git ${tmpdir}/debootstrap --depth 1
 cp  ${tmpdir}/debootstrap/scripts/sid ${tmpdir}/debootstrap/scripts/rolling
 
+VERSION=$(curl -L http://releases.droidian.org/snapshots/${FLAVOUR}/dists/rolling/droidian-version)
+
 mkdir -p "base-${ARCH}-${FLAVOUR}"
 DEBOOTSTRAP_DIR=${tmpdir}/debootstrap \
 ${tmpdir}/debootstrap/debootstrap \
@@ -42,7 +44,7 @@ ${tmpdir}/debootstrap/debootstrap \
 	--keyring=keyrings/all/droidian.gpg \
 	rolling \
 	base-${ARCH}-${FLAVOUR} \
-	http://releases.droidian.org/snapshots/${FLAVOUR}
+	http://releases.droidian.org/snapshots/${VERSION}
 
 case "${ARCH}" in
 	"arm64")
