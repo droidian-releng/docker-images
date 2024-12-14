@@ -38,13 +38,13 @@ echo "Determining target"
 if [ -n "${TAG}" ]; then
 	# Tag, should go to production
 	TARGET="production"
-elif [[ ${BRANCH} = feature/group/* ]]; then
+elif [[ ${BRANCH} = group/* ]]; then
 	# Group
-	_branch=${BRANCH/feature\/group\//}
+	_branch=${BRANCH/group\//}
 	_branch=${_branch//./-}
 	_branch=${_branch//_/-}
 	_branch=${_branch//\//-}
-	TARGET=$(echo ${NAMESPACE}-${_branch} | tr '[:upper:]' '[:lower:]')
+	TARGET=$(echo group-${NAMESPACE}-${_branch} | tr '[:upper:]' '[:lower:]')
 elif [[ ${BRANCH} = feature/* ]]; then
 	# Feature branch
 	_project=${PROJECT_SLUG//\//-}
