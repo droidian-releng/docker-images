@@ -51,3 +51,10 @@ jobs:
           DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
           DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
         run: ./src/push_docker_image.sh "${{ matrix.arch }}/${{ matrix.namespace }}/${{ matrix.template }}:${{ matrix.dist }}"
+
+      - name: Deploy versioned image
+        if: "${{ github.ref == 'refs/heads/master' && matrix.template == 'build-essential' }}"
+        env:
+          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+        run: ./src/push_docker_image.sh "${{ matrix.arch }}/${{ matrix.namespace }}/${{ matrix.template }}:${{ matrix.dist }}" versioned
