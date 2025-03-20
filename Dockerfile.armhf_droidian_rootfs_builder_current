@@ -35,6 +35,7 @@ RUN \
  binfmt-support \
  android-sdk-libsparse-utils \
  python3-yaml \
+ e2fsprogs \
  systemd-container
 
 # Workaround binfmt bug on latest qemu
