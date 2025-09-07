@@ -31,7 +31,7 @@ RUN \
  rsync \
  zip \
  lvm2 \
- qemu-user-static \
+ qemu-user-binfmt \
  binfmt-support \
  android-sdk-libsparse-utils \
  python3-yaml \
